@@ -484,13 +484,15 @@ process.on('SIGINT', async () => {
   process.exit(0);
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`\n🚀 License Protection Server running on port ${PORT}`);
-  console.log(`📡 API Base URL: http://localhost:${PORT}/api`);
-  console.log(`🏥 Health Check: http://localhost:${PORT}/api/health`);
-  console.log(`📊 MongoDB: ${MONGODB_URI}`);
-  console.log('');
-});
-
 module.exports = app;
+
+// Only start the server if this file is run directly (not imported)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`\n🚀 License Protection Server running on port ${PORT}`);
+    console.log(`📡 API Base URL: http://localhost:${PORT}/api`);
+    console.log(`🏥 Health Check: http://localhost:${PORT}/api/health`);
+    console.log(`📊 MongoDB: ${MONGODB_URI}`);
+    console.log('');
+  });
+}

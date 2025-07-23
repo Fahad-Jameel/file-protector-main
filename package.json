@@ -1,113 +1,52 @@
 {
-    "name": "exe-protection-layer",
-    "version": "2.0.0",
-    "description": "Electron-based protection layer wrapper with server-based license management",
-    "main": "main.js",
-    "scripts": {
-        "start": "electron .",
-        "dev": "electron . --debug",
-        "server": "node server.js",
-        "server:dev": "nodemon server.js",
-        "build": "npm run prepare-exe && electron-builder",
-        "dist": "electron-builder --publish=never",
-        "prepare-exe": "node scripts/prepare-executable.js",
-        "build-with-exe": "npm run prepare-exe && npm run build",
-        "debug": "electron debug-paths.js",
-        "test-launch": "electron . --debug",
-        "generate-keys": "node generate-keys.js",
-        "keys": "npm run generate-keys",
-        "setup": "npm install && npm run server:setup",
-        "server:setup": "node -e \"console.log('Run: npm run server\\nThen in another terminal: npm run generate-keys')\"",
-        "clean": "rm -rf dist/ build/ node_modules/.cache",
-        "postinstall": "echo '\n🎉 Installation complete!\n\n📋 Next steps:\n1. Start MongoDB: mongod\n2. Start server: npm run server\n3. Generate keys: npm run generate-keys\n4. Build protection: npm run build\n'"
-    },
-    "keywords": [
-        "protection",
-        "license",
-        "wrapper",
-        "electron",
-        "mongodb",
-        "server",
-        "api"
-    ],
-    "author": "Your Company",
-    "license": "ISC",
-    "devDependencies": {
-        "electron": "^22.0.0",
-        "electron-builder": "^23.0.0",
-        "nodemon": "^3.0.1"
-    },
-    "dependencies": {
-        "express": "^4.18.2",
-        "mongoose": "^7.5.0",
-        "cors": "^2.8.5",
-        "helmet": "^7.0.0",
-        "express-rate-limit": "^6.10.0",
-        "bcrypt": "^5.1.1"
-    },
-    "build": {
-        "appId": "com.yourcompany.protection",
-        "productName": "Protected Application",
-        "directories": {
-            "output": "dist",
-            "buildResources": "build"
-        },
-        "files": [
-            "**/*",
-            "!dist/**/*",
-            "!scripts/**/*",
-            "!original-exe/**/*",
-            "!server.js",
-            "!generate-keys.js",
-            "!*.md",
-            "!.env*",
-            "!test/**/*",
-            "!.git/**/*"
-        ],
-        "extraResources": [
-            {
-                "from": "embedded/",
-                "to": ".hidden/",
-                "filter": ["**/*"]
-            }
-        ],
-        "win": {
-            "target": "nsis"
-        },
-        "nsis": {
-            "oneClick": false,
-            "allowToChangeInstallationDirectory": true,
-            "deleteAppDataOnUninstall": true,
-            "createDesktopShortcut": true,
-            "createStartMenuShortcut": true,
-            "displayLanguageSelector": false,
-           
-            "createStartMenuShortcut": true,
-            "shortcutName": "Protected Application"
-        },
-        "mac": {
-            "target": "dmg",
-            "icon": "icon.icns",
-            "category": "public.app-category.utilities"
-        },
-        "linux": {
-            "target": "AppImage",
-            "icon": "icon.png",
-            "category": "Utility"
-        },
-        "fileAssociations": [],
-        "protocols": []
-    },
-    "engines": {
-        "node": ">=16.0.0",
-        "npm": ">=8.0.0"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/yourcompany/exe-protection-layer"
-    },
-    "bugs": {
-        "url": "https://github.com/yourcompany/exe-protection-layer/issues"
-    },
-    "homepage": "https://github.com/yourcompany/exe-protection-layer#readme"
+  "name": "exe-protection-layer",
+  "version": "2.0.0",
+  "description": "Electron-based protection layer wrapper with server-based license management",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "electron-start": "electron .",
+    "dev": "electron . --debug",
+    "server": "node server.js",
+    "server:dev": "nodemon server.js",
+    "build": "npm run prepare-exe && electron-builder",
+    "dist": "electron-builder --publish=never",
+    "prepare-exe": "node scripts/prepare-executable.js",
+    "build-with-exe": "npm run prepare-exe && npm run build",
+    "debug": "electron debug-paths.js",
+    "test-launch": "electron . --debug",
+    "generate-keys": "node generate-keys.js",
+    "keys": "npm run generate-keys",
+    "setup": "npm install && npm run server:setup",
+    "server:setup": "node -e \"console.log('Run: npm run server\\nThen in another terminal: npm run generate-keys')\"",
+    "clean": "rm -rf dist/ build/ node_modules/.cache",
+    "vercel-build": "echo 'Server build complete'"
+  },
+  "keywords": [
+    "protection",
+    "license",
+    "wrapper",
+    "electron",
+    "mongodb",
+    "server",
+    "api"
+  ],
+  "author": "Your Company",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^22.0.0",
+    "electron-builder": "^23.0.0",
+    "nodemon": "^3.0.1"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.5.0",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "express-rate-limit": "^6.10.0",
+    "bcrypt": "^5.1.1"
+  },
+  "engines": {
+    "node": "18.x"
+  }
 }

@@ -1,0 +1,27 @@
+# Electron specific files
+main.js
+debug-paths.js
+generate-keys.js
+scripts/
+original-exe/
+embedded/
+build/
+dist/
+icon.*
+
+# Development files
+.env*
+*.md
+test/
+.git/
+
+# Dependencies that aren't needed for server
+node_modules/electron*
+node_modules/electron-builder*
+node_modules/@electron*
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
