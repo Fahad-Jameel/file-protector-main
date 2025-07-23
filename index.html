@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License Verification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 400px;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .server-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .server-status.online {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .server-status.offline {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .server-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            display: inline-block;
+        }
+
+        .status-indicator.online {
+            background: #28a745;
+        }
+
+        .status-indicator.offline {
+            background: #ffc107;
+        }
+
+        .status-indicator.error {
+            background: #dc3545;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input[type="text"].valid {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+
+        input[type="text"].invalid {
+            border-color: #dc3545;
+            background: #fff8f8;
+        }
+
+        .input-helper {
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            color: #666;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            text-align: center;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .system-info {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .system-info h3 {
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff40;
+            border-top: 2px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e1e5e9;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .version-info {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            font-size: 0.7rem;
+            color: #999;
+        }
+
+        .offline-mode {
+            display: none;
+            background: #fff3cd;
+            color: #856404;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ffeaa7;
+        }
+
+        .key-format {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🔐</div>
+        
+        <h1>License Verification</h1>
+        <p class="subtitle">Enter your license key to access the protected application</p>
+        
+        <!-- Server Status Indicator -->
+        <div id="serverStatus" class="server-status">
+            <span class="status-indicator"></span>
+            <span id="statusText">Checking server status...</span>
+        </div>
+        
+        <!-- Offline Mode Warning -->
+        <div id="offlineMode" class="offline-mode">
+            <strong>⚠️ Offline Mode:</strong> Running without server connection. Some features may be limited.
+        </div>
+        
+        <form id="licenseForm">
+            <div class="form-group">
+                <label for="licenseKey">License Key</label>
+                <input type="text" id="licenseKey" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" required>
+                <div class="input-helper">
+                    Enter your 16-character license key
+                </div>
+                <div class="key-format">Format: ABCD-EFGH-IJKL-MNOP</div>
+            </div>
+            
+            <button type="submit" class="btn" id="submitBtn">
+                <span id="btnText">Validate & Launch</span>
+                <span id="btnLoading" class="loading hidden"></span>
+            </button>
+            
+            <div class="progress-bar hidden" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </form>
+        
+        <div id="message" class="message"></div>
+        
+        <div id="systemInfo" class="system-info hidden">
+            <h3>System Information</h3>
+            <div id="systemDetails"></div>
+        </div>
+        
+        <div class="version-info">v2.0.0</div>
+    </div>
+
+    <script>
+        class LicenseValidator {
+            constructor() {
+                this.form = document.getElementById('licenseForm');
+                this.licenseInput = document.getElementById('licenseKey');
+                this.submitBtn = document.getElementById('submitBtn');
+                this.btnText = document.getElementById('btnText');
+                this.btnLoading = document.getElementById('btnLoading');
+                this.messageDiv = document.getElementById('message');
+                this.systemInfoDiv = document.getElementById('systemInfo');
+                this.systemDetailsDiv = document.getElementById('systemDetails');
+                this.serverStatusDiv = document.getElementById('serverStatus');
+                this.statusTextSpan = document.getElementById('statusText');
+                this.offlineModeDiv = document.getElementById('offlineMode');
+                this.progressBar = document.getElementById('progressBar');
+                this.progressFill = document.getElementById('progressFill');
+                
+                this.serverOnline = false;
+                this.validationInProgress = false;
+                
+                this.init();
+            }
+
+            init() {
+                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+                this.licenseInput.addEventListener('input', () => this.formatLicenseKey());
+                this.licenseInput.addEventListener('keyup', () => this.validateFormat());
+                
+                // Load system info and check server status
+                this.loadSystemInfo();
+                this.checkServerStatus();
+                
+                // Auto-focus on license input
+                this.licenseInput.focus();
+                
+                // Check server status periodically
+                setInterval(() => {
+                    if (!this.validationInProgress) {
+                        this.checkServerStatus();
+                    }
+                }, 30000); // Every 30 seconds
+            }
+
+            formatLicenseKey() {
+                let value = this.licenseInput.value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+                let formatted = '';
+                
+                for (let i = 0; i < value.length; i++) {
+                    if (i > 0 && i % 4 === 0) {
+                        formatted += '-';
+                    }
+                    formatted += value[i];
+                }
+                
+                if (formatted.length > 19) {
+                    formatted = formatted.substring(0, 19);
+                }
+                
+                this.licenseInput.value = formatted;
+                this.validateFormat();
+            }
+
+            validateFormat() {
+                const value = this.licenseInput.value;
+                const isValid = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(value);
+                
+                if (value.length === 0) {
+                    this.licenseInput.className = '';
+                } else if (isValid) {
+                    this.licenseInput.className = 'valid';
+                } else {
+                    this.licenseInput.className = 'invalid';
+                }
+                
+                return isValid;
+            }
+
+            async checkServerStatus() {
+                try {
+                    const status = await window.electronAPI.checkServerStatus();
+                    this.updateServerStatus(status);
+                } catch (error) {
+                    console.error('Failed to check server status:', error);
+                    this.updateServerStatus({
+                        online: false,
+                        message: 'Status check failed'
+                    });
+                }
+            }
+
+            updateServerStatus(status) {
+                const indicator = this.serverStatusDiv.querySelector('.status-indicator');
+                
+                if (status.online) {
+                    this.serverStatusDiv.className = 'server-status online';
+                    indicator.className = 'status-indicator online';
+                    this.statusTextSpan.textContent = 'Server Online';
+                    this.serverOnline = true;
+                    this.offlineModeDiv.style.display = 'none';
+                } else {
+                    this.serverStatusDiv.className = 'server-status offline';
+                    indicator.className = 'status-indicator offline';
+                    this.statusTextSpan.textContent = status.message || 'Server Offline';
+                    this.serverOnline = false;
+                }
+            }
+
+            async loadSystemInfo() {
+                try {
+                    const systemInfo = await window.electronAPI.getSystemInfo();
+                    this.displaySystemInfo(systemInfo);
+                } catch (error) {
+                    console.error('Failed to load system info:', error);
+                }
+            }
+
+            displaySystemInfo(info) {
+                this.systemDetailsDiv.innerHTML = `
+                    <div><strong>CPU:</strong> ${info.cpu}</div>
+                    <div><strong>Platform:</strong> ${info.platform}</div>
+                    <div><strong>Hostname:</strong> ${info.hostname}</div>
+                `;
+                this.systemInfoDiv.classList.remove('hidden');
+            }
+
+            setProgress(percentage) {
+                this.progressFill.style.width = `${percentage}%`;
+            }
+
+            async handleSubmit(e) {
+                e.preventDefault();
+                
+                const licenseKey = this.licenseInput.value.trim();
+                
+                if (!this.validateFormat()) {
+                    this.showMessage('Please enter a valid license key in the format XXXX-XXXX-XXXX-XXXX', 'error');
+                    return;
+                }
+
+                this.validationInProgress = true;
+                this.setLoading(true);
+                this.hideMessage();
+                this.showProgress();
+
+                try {
+                    // Show validation progress
+                    this.setProgress(20);
+                    await this.sleep(200);
+                    
+                    this.setProgress(50);
+                    const result = await window.electronAPI.validateLicense(licenseKey);
+                    
+                    this.setProgress(100);
+                    await this.sleep(300);
+                    
+                    if (result.success) {
+                        let messageType = 'success';
+                        let message = result.message;
+                        
+                        // Check if running in offline mode
+                        if (result.warning) {
+                            messageType = 'warning';
+                            message += `\n⚠️ ${result.warning}`;
+                            this.offlineModeDiv.style.display = 'block';
+                        }
+                        
+                        this.showMessage(message, messageType);
+                        
+                        // Update button to show launching
+                        this.btnText.textContent = 'Launching Application...';
+                        
+                        // Close window after successful launch (handled by main process)
+                        setTimeout(() => {
+                            // The main process will close the window
+                        }, 2000);
+                        
+                    } else {
+                        this.showMessage(result.message, 'error');
+                        
+                        // If server is offline, show offline mode
+                        if (result.message.includes('server') || result.message.includes('offline')) {
+                            this.updateServerStatus({
+                                online: false,
+                                message: 'Server Unavailable'
+                            });
+                        }
+                    }
+                    
+                } catch (error) {
+                    this.showMessage('Validation failed. Please try again.', 'error');
+                    console.error('Validation error:', error);
+                } finally {
+                    this.validationInProgress = false;
+                    this.setLoading(false);
+                    this.hideProgress();
+                }
+            }
+
+            setLoading(loading) {
+                this.submitBtn.disabled = loading;
+                
+                if (loading) {
+                    this.btnText.textContent = 'Validating...';
+                    this.btnLoading.classList.remove('hidden');
+                } else if (this.btnText.textContent !== 'Launching Application...') {
+                    this.btnText.textContent = 'Validate & Launch';
+                    this.btnLoading.classList.add('hidden');
+                }
+            }
+
+            showProgress() {
+                this.progressBar.classList.remove('hidden');
+                this.setProgress(0);
+            }
+
+            hideProgress() {
+                setTimeout(() => {
+                    this.progressBar.classList.add('hidden');
+                    this.setProgress(0);
+                }, 500);
+            }
+
+            showMessage(message, type) {
+                this.messageDiv.textContent = message;
+                this.messageDiv.className = `message ${type}`;
+                this.messageDiv.style.display = 'block';
+            }
+
+            hideMessage() {
+                this.messageDiv.style.display = 'none';
+            }
+
+            sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+
+        // Initialize the validator when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new LicenseValidator();
+        });
+    </script>
+</body>
+</html>
